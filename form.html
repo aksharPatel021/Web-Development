@@ -1,0 +1,74 @@
+<!--Akshar Patel(3090870)-->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Web page with forms</title>
+</head>
+<body>
+<form id="first" action="http://localhost:3027/temp" method="post" enctype="application/x-www-form-urlencoded">
+    <table>
+        <tr>
+            <td><label for="firstName">First name:</label></td>
+            <td><input type="text" name="firstName" id="firstName" value="first" size="30" maxlength="40"/></td>
+        </tr>
+        <tr>
+            <td><label for="lastName">Last name:</label></td>
+            <td><input type="text" name="lastName" id="lastName" value="last" size="30" maxlength="40"/></td>
+        </tr>
+        <tr>
+            <td><label for="numberOne">Enter a number here</label></td>
+            <td><input type="text" name="numberOne" id="numberOne" value="1.5"/></td>
+        </tr>
+        <tr>
+            <td><label for="numberTwo">Enter a number here</label></td>
+            <td><input type="text" name="numberTwo" id="numberTwo" value="4.5"/></td>
+        </tr>
+    </table>
+    <br/>
+    <label for="msel">Select your operating system:</label>
+    <select name="msel" id="msel" size="4">
+        <option>Linux</option>
+        <option>Unix</option>
+        <option>Window</option>
+        <option>Mac Os X</option>
+    </select>
+    <br/><br/>
+    <table>
+        <tr>
+            <td>
+                <fieldset>
+                    <legend>My favourite mark is:</legend>
+                    <input type="radio" name="mark" id="A1" value="a" checked="checked"/>
+                    <label for="A1">A</label><br/>
+                    <input type="radio" name="mark" id="B1" value="b"/>
+                    <label for="B1">B</label><br/>
+                    <input type="radio" name="mark" id="C1" value="c"/>
+                    <label for="C1">C</label><br/>
+                    <input type="radio" name="mark" id="D1" value="d"/>
+                    <label for="D1">D</label><br/>
+                    <input type="radio" name="mark" id="F1" value="f"/>
+                    <label for="F1">F</label><br/>
+                </fieldset>
+            </td>
+            <td>
+                <fieldset>
+                    <legend>My favourite mark is:</legend>
+                    <input type="checkbox" name="A" id="A2" value="a" checked="checked"/>
+                    <label for="A2">A</label><br/>
+                    <input type="checkbox" name="B" id="B2" value="b"/>
+                    <label for="B2">B</label><br/>
+                    <input type="checkbox" name="C" id="C2" value="c"/>
+                    <label for="C2">C</label><br/>
+                    <input type="checkbox" name="D" id="D2" value="d"/>
+                    <label for="D2">D</label><br/>
+                    <input type="checkbox" name="F" id="F2" value="f"/>
+                    <label for="F2">F</label><br/>
+                </fieldset>
+            </td>
+        </tr>
+    </table>
+    <br/>
+    <input type="submit" value="Submit me"/><input type="reset" value="Reset me"/>
+</form>
+</body>
+</html>
