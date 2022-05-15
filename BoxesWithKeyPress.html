@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title></title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        
+        <style>
+            .box {
+                width:75px;
+                height:75px;
+                position:absolute;
+                top:50%;
+                left:50%;
+                border:1px solid black;
+            }
+
+            .box.selected{
+                background-color:#00FF00;
+            }
+
+            .box.shiftWrong {
+                background-color:#FF0000;
+            }
+        </style>
+
+        <script>
+            window.onload = attachEvt;
+
+            let globalElement = null;
+            let selected = false;
+            let shiftX, shiftY;
+            
+            //Map of functions
+            let keyCodes = {
+                "48": clear,
+                "49": create(1),
+                "50": create(2),
+                "51": create(3),
+                "52": create(4),
+                "53": create(5)
+            }
+
+            function attachEvt() {
+                attachKeys();
+                addEvents();
+            }
+
+            //Handles all the key presses
+            function attachKeys() {
+                window.addEventListener('keypress', function(e){
+                    let keyFn = keyCodes[e.keyCode];
+
+                    keyFn && keyFn();
+                })
+            }
+
+            function addEvents() {
+                window.addEventListener('mousemove', function(e) {
+                    var x,y;
+                    if (selected) {
+                        x = e.pageX - shiftX;
+                        y = e.pageY - shiftY;
+                        if (x < 0 || x > window.innerWidth-75 || y < 0 || y > window.innerHeight-75) {
+                            return;
+                        }
+                        globalElement.style.top = (y)+"px";
+                        globalElement.style.left = (x)+"px";
+                    }
+                })
+                window.addEventListener('mouseup', function(e) {
+                    console.log("mouseup", globalElement);
+                    if (!globalElement) {
+                        return;
+                    }
+                    globalElement.classList.remove('selected');
+                    globalElement.classList.remove('shiftWrong');
+                    selected = false;
+                })
+            }
+
+            function attachElementEvent(el) {
+                el.addEventListener('mousedown', function(e) {
+                    e.preventDefault();
+                    globalElement = el;
+                    console.log("mousedown", globalElement);
+                    if (!e.shiftKey) {
+                        el.classList.add('shiftWrong');
+                        return;
+                    }
+                    selected = true;     
+                    el.classList.remove('shiftWrong');
+                    el.classList.add('selected');
+                    var bounds = el.getBoundingClientRect();
+                    shiftX = e.clientX - bounds.left;
+                    shiftY = e.clientY - bounds.top;
+                    
+
+                });
+            }
+
+            // Higher Order Function to create X boxes and attach all relevant data
+            function create(num) {
+                return function() {
+                    for (let x = 0; x < num; x++){
+                        createBox();
+                    }
+                }
+            }
+
+            function createBox() {
+                let el = document.createElement('div');
+                el.classList.add('box');
+                let pos = randomLocation();
+                el.style.top = pos.y+"px";
+                el.style.left = pos.x+"px";
+
+                attachElementEvent(el);
+
+                document.body.appendChild(el);
+            }
+
+
+            //Fast way to clear out the body
+            function clear() {
+                document.body.innerHTML = "";
+            }
+
+            //Creates a random X/Y
+            function randomLocation() {
+                let xPos = Math.floor(Math.random()*window.innerWidth);
+                if (xPos > window.innerWidth) {
+                    xPos = window.innerWidth-75;
+                }
+                let yPos = Math.floor(Math.random()*window.innerHeight);
+                if (yPos > window.innerHeight) {
+                    yPos = window.innerHeight-75;
+                }
+                return {x : xPos, y : yPos};
+            }
+        </script>
+    </head>
+    <body>
+    </body>
+</html>

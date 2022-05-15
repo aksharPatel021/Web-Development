@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title></title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        
+        <style>
+            .box {
+                width:75px;
+                height:75px;
+                position:absolute;
+                border:1px solid black;
+            }
+
+            .box.selected{
+                background-color:#00FF00;
+            }
+
+            .box.shiftWrong {
+                background-color:#FF0000;
+            }
+        </style>
+
+        <script>
+            window.onload = attachEvt;
+
+            function attachEvt() {
+                var box = document.querySelector('.box');
+                addEvents(box);
+
+            }
+
+            function addEvents(el) {
+                var shiftX, shiftY;
+                var selected = false;
+                el.addEventListener('mousedown', function(e) {
+                    if (!e.shiftKey) {
+                        el.classList.add('shiftWrong');
+                        return;
+                    }
+                    el.classList.remove('shiftWrong');a
+                    el.classList.add('selected');
+                    var bounds = el.getBoundingClientRect();
+                    shiftX = e.clientX - bounds.left;
+                    shiftY = e.clientY - bounds.top;
+                    
+                    selected = true;
+                })
+                
+                window.addEventListener('mousemove', function(e) {
+                    var x,y;
+                    if (selected) {
+                        x = e.pageX - shiftX;
+                        y = e.pageY - shiftY;
+                        if (x < 0 || x > window.innerWidth-75 || y < 0 || y > window.innerHeight-75) {
+                            return;
+                        }
+                        el.style.top = (y)+"px";
+                        el.style.left = (x)+"px";
+                    }
+                })
+                window.addEventListener('mouseup', function(e) {
+                    el.classList.remove('selected');
+                    el.classList.remove('shiftWrong');
+                    selected = false;
+                })
+            }
+        </script>
+    </head>
+    <body>
+        <div class="box"></div>
+    </body>
+</html>

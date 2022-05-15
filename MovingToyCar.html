@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+         .carContainer {
+            position:absolute;
+            top: 25%;
+            left: 25%;
+            width: 180px;
+            height: 300px;
+        }
+
+        .carTop {
+            position: absolute;
+            top: 50px;
+            left: 60px;
+            border: 1px solid black;
+            background-color: rgba(0,0,255,1);
+            height: 40px;
+            width: 60px;
+            border-top-left-radius: 30px;
+            border-top-right-radius: 30px;
+        }
+
+        .carBody {
+            position:absolute;
+            top: 92px;
+            left:0px;
+            width:180px;
+            height:70px;
+            background-color: rgba(255,0,0,1);
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+            border: 1px solid black;
+            color: blue;
+        }
+
+        .carBody p {
+            position: absolute;
+            top:27px;
+            width:100%;
+            text-align: center;
+            margin: 0px;
+        }
+
+        .carWheel {
+            background-color: rgba(0,0,0,1);
+        }
+
+        .carWheel1 {
+            position:absolute;
+            top: 164px;
+            left: 20px;
+            border: 1px solid black;
+            border-radius: 20px;
+            height: 40px;
+            width: 40px;
+        }
+
+        .carWheel2 {
+            position:absolute;
+            top: 164px;
+            left: 120px;
+            border: 1px solid black;
+            border-radius: 20px;
+            height: 40px;
+            width: 40px;
+        }
+    </style>
+</head>
+<body>
+    <div class="carContainer">
+        <div class="carTop"></div>
+        <div class="carBody">
+            <p>Toyota</p>
+        </div>
+        <div class="carWheel carWheel1"></div>
+        <div class="carWheel carWheel2"></div>
+    </div>
+    
+    <div>
+        <button id="leftBtn">
+            &lAarr;
+        </button>
+        <button id="rightBtn">
+            &rAarr;
+        </button>
+        <button id="opaqueBtnUp">
+            &uparrow; Opaque
+        </button>
+        <button id="opaqueBtnDown">
+            &downarrow; Opaque
+        </button>
+    </div>
+
+    <script>
+        let carContainer;
+        let globalOpaque = 1;
+
+        window.onload = function() {
+            carContainer = document.getElementsByClassName('carContainer')[0];
+            document.getElementById('leftBtn').addEventListener('click', moveFn(1));
+            document.getElementById('rightBtn').addEventListener('click', moveFn(-1));
+            document.getElementById('opaqueBtnUp').addEventListener('click', opaque(-0.1));
+            document.getElementById('opaqueBtnDown').addEventListener('click', opaque(0.1));
+            carContainer.style.left += carContainer.offsetLeft+"px";
+        }
+
+        // Returns functions that handle moving our car different directions
+        function moveFn(dir) {
+            return function(e) {
+                let movement = (carContainer.offsetLeft - 5*dir);
+                let carSize = carContainer.clientWidth;
+                if (movement+carSize > window.outerWidth || movement < 0 ) {
+                    return;
+                }
+                carContainer.style.left = movement+"px";
+            }
+        }
+
+        // Returns functions that handle different opacity directions
+        function opaque(dir) {
+            return function(e){
+
+                adjustOpaque(dir);
+                let wheels = []
+                    .concat(toArray(document.getElementsByClassName('carWheel')))
+                    .concat(toArray(document.getElementsByClassName('carBody')))
+                    .concat(toArray(document.getElementsByClassName('carTop')))
+                    .concat(toArray(document.getElementsByClassName('carBottom')));
+                wheels.forEach(function(el){
+                    let baseColor = getBaseColor(el);
+                    el.style.backgroundColor = "rgba("+baseColor+","+globalOpaque+")";
+                });
+                
+
+            }
+        }
+
+        //Figure out our base color - need to handle both rgb and rgba
+        function getBaseColor(el) {
+            
+            let baseColor = window.getComputedStyle(el).backgroundColor;
+            let startIdx = 4
+            if (baseColor.startsWith('rgba')) {
+                startIdx = 5;
+            }
+            let colors = baseColor.substring(startIdx,baseColor.length-1).split(',');
+            if (colors.length > 3) {
+                colors.pop();
+            }
+            return colors.join(',');
+        }
+
+        //Convert a nodelist to an array
+        function toArray(arr) {
+            return Array.prototype.slice.call(arr);
+        }
+
+
+        // Handle adjusting our opacity - need to deal with floating point rounding
+        function adjustOpaque(dir) {
+            let localOpaque = globalOpaque - dir;
+            if (localOpaque > 1 || localOpaque < 0) {
+                return;
+            }
+            globalOpaque = localOpaque.toFixed(2);
+        }
+    </script>
+</body>
+</html>
